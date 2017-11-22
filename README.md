@@ -28,7 +28,7 @@ sync.token = <apiToken>
 //post service request
 sync.post(data, done);
 
-//patch service request
+//patch service request(partial updates)
 sync.patch(changes, done)
 
 ```
@@ -48,7 +48,7 @@ $ npm test
 ```
 
 ## Contribute
-It will be nice, if you open an issue first so that we can know what is going on, then, fork this repo and push in your ideas. Do not forget to add a bit of test(s) of what value you adding.
+It will be nice(not must), if you open an issue first so that we can know what is going on, then, fork this repo and push in your ideas. Do not forget to add a bit of test(s) of what value you adding.
 
 ## Licence
 The MIT License (MIT)
