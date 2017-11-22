@@ -73,6 +73,8 @@ describe('sync', function () {
   });
 
 
+  //post
+
   describe('post', function () {
 
     beforeEach(function () {
@@ -91,8 +93,8 @@ describe('sync', function () {
 
       sync.post(data, function (error) {
         expect(error).to.exist;
-        expect(error.message).to.be.equal(
-          'Missing Server Base URL');
+        expect(error.message)
+          .to.be.equal('Missing Server Base URL');
         done();
       });
 
@@ -174,6 +176,122 @@ describe('sync', function () {
     it('should be able to handle post error', function (done) {
 
       sync.post(data, function (error, response) {
+
+        expect(error).to.exist;
+        expect(error.status).to.be.equal(500);
+        expect(response).to.not.exist;
+
+        done();
+
+      });
+
+    });
+
+  });
+
+
+  //patch
+
+  describe('patch', function () {
+
+    beforeEach(function () {
+      sync.reset();
+    });
+
+    it('should have patch method', function () {
+      expect(sync.patch).to.exist;
+      expect(sync.patch).to.be.a('function');
+      expect(sync.patch.length).to.be.equal(2);
+    });
+
+    it('should throw Missing Server Base URL if none defined',
+      function (done) {
+        const data = {};
+
+        sync.patch(data, function (error) {
+          expect(error).to.exist;
+          expect(error.message)
+            .to.be.equal('Missing Server Base URL');
+          done();
+        });
+
+      });
+
+
+    it('should throw Missing API Token if none defined', function (done) {
+      const data = {};
+
+      sync.baseUrl = faker.internet.url();
+
+      sync.patch(data, function (error) {
+        expect(error).to.exist;
+        expect(error.message).to.be.equal('Missing API Token');
+        done();
+      });
+
+    });
+
+
+    it('should throw Missing Service Request Data if none defined',
+      function (done) {
+
+        sync.baseUrl = faker.internet.url();
+        sync.token = faker.random.uuid();
+
+        sync.patch(function (error) {
+          expect(error).to.exist;
+          expect(error.message)
+            .to.be.equal('Missing Service Request Data');
+          done();
+        });
+
+      });
+
+  });
+
+  describe('patch#success', function () {
+
+    const baseUrl = faker.internet.url();
+    const token = faker.random.uuid();
+    const data = faker.helpers.userCard();
+
+    sync.baseUrl = baseUrl;
+    sync.token = token;
+
+    beforeEach(function () {
+      nock(sync.baseUrl).patch(sync.uri).reply(201, data);
+    });
+
+    it('should be able to patch successfully', function (done) {
+
+      sync.patch(data, function (error, response) {
+        expect(error).to.not.exist;
+        expect(response).to.exist;
+        expect(response).to.be.eql(data);
+        done(error, response);
+      });
+
+    });
+
+  });
+
+
+  describe('patch#error', function () {
+
+    const baseUrl = faker.internet.url();
+    const token = faker.random.uuid();
+    const data = faker.helpers.userCard();
+
+    sync.baseUrl = baseUrl;
+    sync.token = token;
+
+    beforeEach(function () {
+      nock(sync.baseUrl).patch(sync.uri).reply(500, {});
+    });
+
+    it('should be able to handle patch error', function (done) {
+
+      sync.patch(data, function (error, response) {
 
         expect(error).to.exist;
         expect(error.status).to.be.equal(500);

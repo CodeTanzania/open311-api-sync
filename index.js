@@ -126,15 +126,16 @@ exports.reset = function () {
 
 
 /**
- * @name post
- * @param  {Object} [options] valid sync options
- * @param  {Object} data valid service request
+ * @name preflight
+ * @description perform pre-logics i.e validations and pre-condtions
+ *              checking for successful syncing
+ * @param  {Object} data valid service request data or changes
  * @done {Function} a callback to invoke on success or failure
  * @type {Function}
- * @since 0.1.0
+ * @since 0.2.0
  * @version 0.1.0
  */
-exports.post = function (data, done) {
+exports.preflight = function (data, done) {
 
   //normalize arguments
   if (_.isFunction(data)) {
@@ -143,7 +144,7 @@ exports.post = function (data, done) {
   }
 
   //obtain options
-  const options = exports.options;
+  const options = _.merge({}, exports.options);
 
   //ensure server base url
   if (_.isEmpty(options.baseUrl)) {
@@ -171,46 +172,136 @@ exports.post = function (data, done) {
     return done(error);
   }
 
-  //ensure default headers
+  //ensure default request headers
   options.headers = {
     'Authorization': 'Bearer ' + options.token,
-    'Accept': 'application/json'
+    'Accept': 'application/json',
   };
 
-  //create downstream http client
-  const requestOptions = {
-    baseUrl: options.baseUrl,
-    uri: options.uri,
-    headers: options.headers,
-    gzip: options.gzip,
-    json: data
-  };
+  //continue
+  return done(null, options);
 
-  //post service request
-  request
-    .post(requestOptions, function (error, response, body) {
-
-      //handle error
-      if (error) {
-        return done(error);
-      }
-
-      //check if response succeed
-      const isSuccess =
-        (response &&
-          (response.statusCode === 201 || response.statusCode === 200));
-
-      //handle error response
-      if (!isSuccess) {
-        error = new Error('Fail to Sync Service Request');
-        error.status = response.statusCode;
-        return done(error);
-      }
-
-      //handle success response
-      return done(null, body);
+};
 
 
-    });
+/**
+ * @name post
+ * @param  {Object} data valid service request
+ * @done {Function} a callback to invoke on success or failure
+ * @type {Function}
+ * @since 0.1.0
+ * @version 0.1.0
+ */
+exports.post = function (data, done) {
+
+  //run request pre-flight
+  exports.preflight(data, function (error, options) { //start pre-flight
+
+    //back-off in case of error during pre-flight
+    if (error) {
+      return done(error);
+    }
+
+    //continue with request
+
+    //prepare post downstream http request options
+    const requestOptions = {
+      baseUrl: options.baseUrl,
+      uri: options.uri,
+      headers: options.headers,
+      gzip: options.gzip,
+      json: data //this will set content type to application/json
+    };
+
+    //post service request
+    request
+      .post(requestOptions, function (error, response, body) {
+
+        //handle error
+        if (error) {
+          return done(error);
+        }
+
+        //check if response succeed
+        const isSuccess =
+          (response &&
+            (response.statusCode === 201 ||
+              response.statusCode === 200));
+
+        //handle error response
+        if (!isSuccess) {
+          error = new Error('Fail to Sync Service Request');
+          error.status = response.statusCode;
+          return done(error);
+        }
+
+        //handle success response
+        return done(null, body);
+
+      });
+
+
+  }); //end preflight
+
+};
+
+
+/**
+ * @name post
+ * @param  {Object} data valid service request changes
+ * @done {Function} a callback to invoke on success or failure
+ * @type {Function}
+ * @since 0.2.0
+ * @version 0.1.0
+ */
+exports.patch = function (data, done) {
+
+  //run request pre-flight
+  exports.preflight(data, function (error, options) { //start pre-flight
+
+    //back-off in case of error during pre-flight
+    if (error) {
+      return done(error);
+    }
+
+    //continue with request
+
+    //prepare patch downstream http request options
+    const requestOptions = {
+      baseUrl: options.baseUrl,
+      uri: options.uri,
+      headers: options.headers,
+      gzip: options.gzip,
+      json: data //this will set content type to application/json
+    };
+
+    //patch service request
+    request
+      .patch(requestOptions, function (error, response, body) {
+
+        //handle error
+        if (error) {
+          return done(error);
+        }
+
+        //check if response succeed
+        const isSuccess =
+          (response &&
+            (response.statusCode === 201 ||
+              response.statusCode === 200));
+
+        //handle error response
+        if (!isSuccess) {
+          error = new Error('Fail to Sync Service Request');
+          error.status = response.statusCode;
+          return done(error);
+        }
+
+        //handle success response
+        return done(null, body);
+
+      });
+
+  }); //end preflight
 
 };

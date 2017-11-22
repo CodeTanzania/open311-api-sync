@@ -1,6 +1,6 @@
 {
   "name": "open311-api-sync",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Service Request sync for open311-api",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,9 @@
     "tanzania",
     "http",
     "api",
-    "sync"
+    "sync",
+    "citizen",
+    "feedback"
   ],
   "author": {
     "name": "lykmapipo",
