@@ -33,8 +33,8 @@ exports.defaults = {
 
   /**
    * @name timeout
-   * @description number of milliseconds to wait for a server to send 
-   *              response headers (and start the response body) before 
+   * @description number of milliseconds to wait for a server to send
+   *              response headers (and start the response body) before
    *              aborting the request
    * @type {Number}
    * @since 0.1.0
@@ -44,8 +44,8 @@ exports.defaults = {
 
   /**
    * @name gzip
-   * @description add an Accept-Encoding header to request compressed content 
-   *              encodings from the server (if not already present) and 
+   * @description add an Accept-Encoding header to request compressed content
+   *              encodings from the server (if not already present) and
    *              decode supported content encodings in the response
    * @type {Boolean}
    * @since 0.1.0
@@ -56,7 +56,7 @@ exports.defaults = {
 
   /**
    * @name baseUrl
-   * @description base url of the server which receive service request(or issue) 
+   * @description base url of the server which receive service request(or issue)
    * @type {String}
    * @since 0.1.0
    * @version 0.1.0
@@ -76,8 +76,8 @@ exports.defaults = {
 
   /**
    * @name token
-   * @description authorization token of the server which receive 
-   *              service request(or issue) 
+   * @description authorization token of the server which receive
+   *              service request(or issue)
    * @type {String}
    * @since 0.1.0
    * @version 0.1.0
@@ -200,7 +200,7 @@ exports.post = function (data, done) {
         (response &&
           (response.statusCode === 201 || response.statusCode === 200));
 
-      //handle error response  
+      //handle error response
       if (!isSuccess) {
         error = new Error('Fail to Sync Service Request');
         error.status = response.statusCode;

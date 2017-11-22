@@ -28,6 +28,9 @@ sync.token = <apiToken>
 //post service request
 sync.post(data, done);
 
+//patch service request
+sync.patch(changes, done)
+
 ```
 
 
