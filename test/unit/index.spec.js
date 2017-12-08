@@ -3,6 +3,7 @@
 
 //global dependencies(or imports)
 const path = require('path');
+const _ = require('lodash');
 const nock = require('nock');
 const expect = require('chai').expect;
 const faker = require('faker');
@@ -253,13 +254,16 @@ describe('sync', function () {
 
     const baseUrl = faker.internet.url();
     const token = faker.random.uuid();
-    const data = faker.helpers.userCard();
+    const data =
+      _.merge({}, { _id: faker.random.uuid() }, faker.helpers.userCard());
 
     sync.baseUrl = baseUrl;
     sync.token = token;
 
     beforeEach(function () {
-      nock(sync.baseUrl).patch(sync.uri).reply(201, data);
+      nock(sync.baseUrl)
+        .patch(sync.uri + '/' + data._id)
+        .reply(200, data);
     });
 
     it('should be able to patch successfully', function (done) {
@@ -280,13 +284,14 @@ describe('sync', function () {
 
     const baseUrl = faker.internet.url();
     const token = faker.random.uuid();
-    const data = faker.helpers.userCard();
+    const data =
+      _.merge({}, { _id: faker.random.uuid() }, faker.helpers.userCard());
 
     sync.baseUrl = baseUrl;
     sync.token = token;
 
     beforeEach(function () {
-      nock(sync.baseUrl).patch(sync.uri).reply(500, {});
+      nock(sync.baseUrl).patch(sync.uri + '/' + data._id).reply(500, {});
     });
 
     it('should be able to handle patch error', function (done) {

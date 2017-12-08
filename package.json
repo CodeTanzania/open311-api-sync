@@ -1,6 +1,6 @@
 {
   "name": "open311-api-sync",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Service Request sync for open311-api",
   "main": "index.js",
   "scripts": {

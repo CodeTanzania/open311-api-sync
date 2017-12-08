@@ -269,7 +269,7 @@ exports.patch = function (data, done) {
     //prepare patch downstream http request options
     const requestOptions = {
       baseUrl: options.baseUrl,
-      uri: options.uri,
+      uri: [options.uri, data._id || data.id].join('/'),
       headers: options.headers,
       gzip: options.gzip,
       json: data //this will set content type to application/json
