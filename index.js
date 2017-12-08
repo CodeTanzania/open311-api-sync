@@ -281,7 +281,7 @@ exports.patch = function (data, done) {
 
         //handle error
         if (error) {
-          return done(error);
+          return done(error, response);
         }
 
         //check if response succeed
@@ -294,11 +294,11 @@ exports.patch = function (data, done) {
         if (!isSuccess) {
           error = new Error('Fail to Sync Service Request');
           error.status = response.statusCode;
-          return done(error);
+          return done(error, response);
         }
 
         //handle success response
-        return done(null, body);
+        return done(null, body, response);
 
       });
 
